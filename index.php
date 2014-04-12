@@ -1,5 +1,5 @@
 <?php
-    ini_set('display_errors', 'Off');
+    ini_set('display_errors', 'On');
 
     require 'lib/Slim/Slim.php';
     \Slim\Slim::registerAutoloader();
@@ -8,7 +8,7 @@
     Twig_Autoloader::register();
 
     $app = new \Slim\Slim(array(
-        'debug' => false,
+        'debug' => true,
         'view' => new \Slim\Views\Twig(),
         'templates.path' => 'templates'
     ));
@@ -16,7 +16,7 @@
     $view = $app->view();
     
     $view->parserOptions = array(
-        'debug' => false,
+        'debug' => true,
         'cache' => dirname(__FILE__) . '/cache'
     );
 
