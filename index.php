@@ -29,11 +29,12 @@
     $app->get('/products/:productId', function ($productId) use ($app) {
         $app->contentType('application/json');
         $result = array(
-            
-                "id" => $productId,
-                "name" => "Product #".$productId,
-                "description" => "This will contain the full description of the product. It will be displayed in the ProductDetail Activity",
-                "smallDescription" => "Small description displayed in products lists"
+                "product" => array(
+                    "id" => $productId,
+                    "name" => "Product #".$productId,
+                    "description" => "This will contain the full description of the product. It will be displayed in the ProductDetail Activity",
+                    "smallDescription" => "Small description displayed in products lists"
+                )
         );
         echo json_encode($result);
     });
