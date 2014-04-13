@@ -63,6 +63,7 @@
                 ),
             )
         );
+	echo json_encode($result);
     });
 
     $app->run();
