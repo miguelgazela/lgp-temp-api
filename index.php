@@ -63,7 +63,26 @@
                 ),
             )
         );
-	echo json_encode($result);
+	      echo json_encode($result);
+    });
+
+    $app->post('/validation/', function () use($app) {
+        $app->contentType('application/json');
+        $data = json_decode($app->request()->getBody(), true);
+
+        $result["result"] = $data["id"] === $data["encryptedID"];
+
+
+        if ($data["id"] == $data["encryptedID"]) {
+          $result["result"] = "valid";
+          $result["product"] =  array(
+                "id" => $data["productID"],
+                "name" => "Product #".$data["productID"],
+                "description" => "This will contain the full description of the product. It will be displayed in the ProductDetail Activity",
+                "smallDescription" => "Small description displayed in products lists"
+            );
+        }
+        echo json_encode($result);
     });
 
     $app->run();
