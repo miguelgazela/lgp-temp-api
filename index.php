@@ -26,12 +26,12 @@
         $app->render('index.html');
     });
 
-    $app->get('/products/:productId', function ($productId) use ($app) {
+    $app->get('/products/:id', function ($id) use ($app) {
         $app->contentType('application/json');
         $result = array(
             "product" => array(
-                "id" => $productId,
-                "name" => "Product #".$productId,
+                "id" => $id,
+                "name" => "Product #".$id,
                 "description" => "This will contain the full description of the product. It will be displayed in the ProductDetail Activity",
                 "smallDescription" => "Small description displayed in products lists"
             )
@@ -39,7 +39,7 @@
         echo json_encode($result);
     });
 
-    $app->get('/products/', function () use ($app) {
+    $app->get('/products', function () use ($app) {
         $app->contentType('application/json');
         $result = array(
             "products" => array(
