@@ -36,8 +36,8 @@
         setup($app);
         $result = array(
             "product" => array(
-                "id" => $productId,
-                "name" => "Product #".$productId,
+                "id" => $id,
+                "name" => "Product #".$id,
                 "description" => "This will contain the full description of the product. It will be displayed in the ProductDetail Activity",
                 "smallDescription" => "Small description displayed in products lists"
             )
