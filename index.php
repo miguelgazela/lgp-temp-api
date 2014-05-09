@@ -99,7 +99,7 @@
         echo json_encode($result);
     });
 
-
+    //users access level -> 0 - base, 1 - mid, 2 - max
     $app->get('/backoffices/', function () use ($app) {
         setup($app);
         $result["backoffices"] = array(
@@ -168,6 +168,7 @@
         echo json_encode($result);
     });
 
+    // type -> 0 - visitor, 1 - user, 2 - admin, 3 - superuser
     $app->post('/account/login', function () use ($app) {
         setup($app);
         $data = json_decode($app->request()->getBody(), true);
