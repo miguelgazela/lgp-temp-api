@@ -1,10 +1,11 @@
 <?php
     ini_set('display_errors', 'On');
-
+    require 'vendor/autoload.php';
     require 'lib/Slim/Slim.php';
-    \Slim\Slim::registerAutoloader();
-
     require 'lib/Twig/Autoloader.php';
+    require 'database.php';
+
+    \Slim\Slim::registerAutoloader();
     Twig_Autoloader::register();
 
     $app = new \Slim\Slim(array(
@@ -19,6 +20,7 @@
         'debug' => true,
         'cache' => dirname(__FILE__) . '/cache'
     );
+    
 
     function setup($app) {
         $app->contentType('application/json');
@@ -35,9 +37,18 @@
         $app->render('index.html');
     });
 
-    $app->options('/(:name+)', function() use ($app) {
+    $app->get('/categories', function () use ($app) {
+        $categories = Category::all();
+
+        $res = $app->response();
+        $res['Content-Type'] = 'application/json';
+        $res->body($categories);
+    });
+
+    $app->post('/products', function() use ($app) {
         setup($app);
-        echo json_encode("accepted");
+        $data = $app->request()->getBody();
+        echo json_encode(array("result" => "worked!", "data" => $data));
     });
 
     $app->get('/products/:id', function ($id) use ($app) {
@@ -55,29 +66,19 @@
 
     $app->get('/products/', function () use ($app) {
         setup($app);
-        $result = array(
-            "products" => array(
-                array(
-                    "id" => "1",
-                    "name" => "Product #1",
-                    "description" => "This will contain the full description of the product. It will be displayed in the ProductDetail Activity",
-                    "smallDescription" => "Small description displayed in products lists"
-                ),
-                array(
-                    "id" => "2",
-                    "name" => "Product #2",
-                    "description" => "This will contain the full description of the product. It will be displayed in the ProductDetail Activity",
-                    "smallDescription" => "Small description displayed in products lists"
-                ),
-                array(
-                    "id" => "3",
-                    "name" => "Product #3",
-                    "description" => "This will contain the full description of the product. It will be displayed in the ProductDetail Activity",
-                    "smallDescription" => "Small description displayed in products lists"
-                ),
-            )
-        );
-	      echo json_encode($result);
+
+        $result = array();
+
+        for($i = 0; $i < 30; $i++) {
+            $result['products'][$i] = array(
+                "id" => "$i",
+                "name" => "Product #$i",
+                "description" => "This will contain the full description of the product. It will be displayed in the ProductDetail Activity",
+                "smallDescription" => "Small description displayed in products lists"
+            );
+        }
+
+	   echo json_encode($result);
     });
 
     $app->post('/validation/', function () use($app) {
@@ -146,6 +147,14 @@
                 "id" => 2,
                 "name" => "Lisboa",
                 "coordinates" => array("latitude"=>"38.76", "longitude"=>"-9.09")
+            ), array(
+                "id" => 3,
+                "name" => "Lisboa",
+                "coordinates" => array("latitude"=>"38.77", "longitude"=>"-9.09")
+            ), array(
+                "id" => 4,
+                "name" => "Lisboa",
+                "coordinates" => array("latitude"=>"38.75", "longitude"=>"-9.09")
             ));
         echo json_encode($result);
     });
