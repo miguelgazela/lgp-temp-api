@@ -38,14 +38,14 @@
 
     // ROUTES
 
-    $app->get('/', function () use ($app) {
-        // setup($app);
-        $app->render('index.html');
-    });
-
     require 'routes/auth.php';
     require 'routes/products.php';
     require 'routes/backoffices.php';
+
+    $app->get('/', function () use ($app) {
+        setup($app);
+        $app->render('index.html');
+    });
 
     $app->get('/categories', function () use ($app) {
         $categories = Category::all();
