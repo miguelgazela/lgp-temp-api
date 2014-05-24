@@ -22,7 +22,7 @@
     );
     
     function setup($app) {
-        $app->contentType('application/json');
+        // $app->contentType('application/json');
         $app->response()->header('Access-Control-Allow-Origin', '*');
         $app->response()->header('Access-Control-Allow-Methods','POST, GET, PUT, DELETE, OPTIONS, HEAD');
         $app->response()->header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
@@ -39,15 +39,13 @@
     // ROUTES
 
     $app->get('/', function () use ($app) {
-        setup($app);
+        // setup($app);
         $app->render('index.html');
     });
 
     require 'routes/auth.php';
     require 'routes/products.php';
     require 'routes/backoffices.php';
-    require 'routes/auth.php';
-    
 
     $app->get('/categories', function () use ($app) {
         $categories = Category::all();

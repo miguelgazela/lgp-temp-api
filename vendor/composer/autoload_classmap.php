@@ -10,5 +10,6 @@ return array(
     'Category' => $baseDir . '/models/Category.php',
     'Client' => $baseDir . '/models/Client.php',
     'Product' => $baseDir . '/models/Product.php',
+    'TagReading' => $baseDir . '/models/TagReading.php',
     'User' => $baseDir . '/models/User.php',
 );
