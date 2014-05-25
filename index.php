@@ -38,10 +38,10 @@
     });
 
     $app->get('/categories', function () use ($app) {
+        setup($app);
         $categories = Category::all();
 
         $res = $app->response();
-        $res['Content-Type'] = 'application/json';
         $res->body($categories);
     });
 
