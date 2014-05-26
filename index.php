@@ -22,7 +22,7 @@
     );
     
     function setup($app) {
-        // $app->contentType('application/json');
+        $app->contentType('application/json');
         $app->response()->header('Access-Control-Allow-Origin', '*');
         $app->response()->header('Access-Control-Allow-Methods','POST, GET, PUT, DELETE, OPTIONS, HEAD');
         $app->response()->header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
@@ -36,83 +36,28 @@
         $res->body($data);
     }
 
+    function isRequestValid($app) {
+        return strtolower($app->request()->params('app')) == "bulla";
+    }
+
+    function param($app, $name) {
+        return $app->request()->params($name);
+    }
+
     // ROUTES
 
     require 'routes/auth.php';
     require 'routes/products.php';
     require 'routes/backoffices.php';
+    require 'routes/categories.php';
+    require 'routes/validation.php';
+    require 'routes/selling_locations.php';
 
     $app->get('/', function () use ($app) {
         setup($app);
         $app->render('index.html');
     });
 
-    $app->get('/categories', function () use ($app) {
-        setup($app);
-        $categories = Category::all();
-        returnJson($categories);
-    });
-
-    $app->post('/validation/', function () use($app) {
-        setup($app);
-        $data = json_decode($app->request()->getBody(), true);
-
-        $result["result"] = $data["id"] === $data["encryptedID"];
-
-
-        if ($data["id"] == $data["encryptedID"]) {
-          $result["result"] = "valid";
-          $result["product"] =  array(
-                "id" => $data["productID"],
-                "name" => "Product #".$data["productID"],
-                "description" => "This will contain the full description of the product. It will be displayed in the ProductDetail Activity",
-                "smallDescription" => "Small description displayed in products lists"
-            );
-        }
-        echo json_encode($result);
-    });
-
-
-    $app->get('/selling_locations/', function () use ($app) {
-        setup($app);
-        $result["locations"] = array(
-            array(
-                "id" => 1,
-                "name" => "Porto",
-                "coordinates"=> array("latitude"=>"0.0", "longitude"=>"0.0")
-            ), array(
-                "id" => 2,
-                "name" => "Lisboa",
-                "coordinates" => array("latitude"=>"38.76", "longitude"=>"-9.09")
-            ), array(
-                "id" => 3,
-                "name" => "Lisboa",
-                "coordinates" => array("latitude"=>"38.77", "longitude"=>"-9.09")
-            ), array(
-                "id" => 4,
-                "name" => "Lisboa",
-                "coordinates" => array("latitude"=>"38.75", "longitude"=>"-9.09")
-            ));
-        echo json_encode($result);
-    });
-    
-    $app->get('/selling_locations/:id', function ($id) use ($app) {
-        setup($app);
-        $result["location"] = array(
-            "id" => 1,
-            "name" => "Porto",
-            "coordinates"=> array("latitude"=>"0.0", "longitude"=>"0.0")
-        );
-
-        if($id == 2) {
-            $result["location"] = array(
-                "id" => 2,
-                "name" => "Lisboa",
-                "coordinates"=> array("latitude"=>"38.76", "longitude"=>"-9.09")
-            );
-        }
-        echo json_encode($result);
-    });
 
     $app->run();
 ?>
