@@ -22,10 +22,10 @@
     );
     
     function setup($app) {
-        // $app->contentType('application/json');
+        $app->contentType('application/json');
         $app->response()->header('Access-Control-Allow-Origin', '*');
         $app->response()->header('Access-Control-Allow-Methods','POST, GET, PUT, DELETE, OPTIONS, HEAD');
-        $app->response()->header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+        $app->response()->header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         $app->response()->header('Access-Control-Allow-Credentials', 'true');
     }
 
@@ -43,7 +43,7 @@
     require 'routes/backoffices.php';
 
     $app->get('/', function () use ($app) {
-        setup($app);
+        // setup($app);
         $app->render('index.html');
     });
 

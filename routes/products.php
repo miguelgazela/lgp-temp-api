@@ -14,6 +14,7 @@
 	});
 
 	$app->get('/products', function () use ($app) {
+		setup($app);
 		$products = Product::all();
 		returnJson($products);
 	});

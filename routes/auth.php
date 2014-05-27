@@ -2,8 +2,7 @@
 
 	// type -> 0 - visitor, 1 - user, 2 - admin, 3 - superuser
     $app->post('/account/login', function () use ($app) {
-    	$app->contentType('application/json');
-        setup($app);
+        // setup($app);
 
         $data = json_decode($app->request()->getBody(), true);
 
@@ -31,6 +30,14 @@
         }
         
         echo json_encode($result);
+    });
+
+    $app->options('/account/login', function () use ($app) {
+        $app->response->headers->set('Content-Type', 'application/json');
+        $app->response->headers->set('Access-Control-Allow-Origin', 'http://localhost:8000');
+        $app->response->headers->set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS, HEAD');
+        $app->response->headers->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        $app->response->headers->set('Access-Control-Allow-Credentials', 'application/json');
     });
 
     $app->post('/account/logout', function () use ($app) {
