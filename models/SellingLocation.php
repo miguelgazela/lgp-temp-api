@@ -1,7 +1,7 @@
 <?php
 
-	class User extends Illuminate\Database\Eloquent\Model {
-    protected $table = 'bulla_users';
+	class SellingLocation extends Illuminate\Database\Eloquent\Model {
+    protected $table = 'bulla_selling_locations';
     public $timestamps = false;
 
     public function client() {
