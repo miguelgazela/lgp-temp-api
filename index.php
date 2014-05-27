@@ -36,7 +36,7 @@
           }
       exit;
     }
-    
+
     function setHeaders() {
         $app = \Slim\Slim::getInstance();
         $app->response()->header('Access-Control-Allow-Origin', '*');

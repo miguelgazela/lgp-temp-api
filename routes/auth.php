@@ -65,33 +65,28 @@
         $data = json_decode($app->request()->getBody(), true);
         $result = array();
 
-        if($data["username"] == "user") {
-            if($data["password"] == "1a1dc91c907325c69271ddf0c944bc72") { //pass1
-                $result["result"] = "success";
-                $result["user"] = array("id"=>1, "name"=>"John", "username"=>"user1", "type"=>"superuser");
+        if(isset($data['username']) && isset($data['password'])) {
+            $username = $data['username'];
+            $password = $data['password'];
+
+            $user = User::where('username', '=', $username)->where('password', '=', $password)->get()->toArray();
+            
+            if($user) {
+                $result['result'] = "success";
+                $result['user'] = $user;
             } else {
-                $result["result"] = "error";
-                $result["data"] = "wrong password";
+                $result['result'] = "error";
+                $result['data'] = "Invalid login";
             }
-        } else if($data["username"] == "admin") {
-            if($data["password"] == "1a1dc91c907325c69271ddf0c944bc72") { //pass2
-                $result["result"] = "success";
-                $result["user"] = array("id"=>2, "name"=>"Michael", "username"=>"user2", "type"=>"admin");
-            } else {
-                $result["result"] = "error";
-                $result["data"] = "wrong password";
-            }
+
         } else {
-            $result["result"] = "error";
-            $result["data"] = "User ".$data["username"]." does not exist";
+            $result['result'] = "error";
+            $result['error_msg'] = "Missing required parameters";
+            $result['data'] = array();
         }
         
         returnJson($result);
     }
-
-    // $app->options('/account/login', function () use ($app) {
-    //     setHeadersApp($app);
-    // });
 
     function logout() {
         setHeaders();

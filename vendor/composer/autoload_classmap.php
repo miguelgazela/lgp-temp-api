@@ -6,11 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AndroidUser' => $baseDir . '/models/AndroidUser.php',
     'Category' => $baseDir . '/models/Category.php',
     'Client' => $baseDir . '/models/Client.php',
     'Product' => $baseDir . '/models/Product.php',
+    'SellingLocation' => $baseDir . '/models/SellingLocation.php',
     'TagReading' => $baseDir . '/models/TagReading.php',
     'User' => $baseDir . '/models/User.php',
-    'AndroidUser' => $baseDir . '/models/AndroidUser.php',
-    'SellingLocation' => $baseDir . '/models/SellingLocation.php'
 );

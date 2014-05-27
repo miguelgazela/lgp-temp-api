@@ -37,6 +37,7 @@
 	}
 
 	function getProducts() {
+		setHeaders();
 		$products = Product::all()->toArray();
 		returnJson($products);
 	}
