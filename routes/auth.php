@@ -1,8 +1,20 @@
 <?php
+    use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-    $app->get('/register', function () use ($app) {
-        setup($app);
-        
+    // ROUTES -->
+
+    $app->get('/register', 'addRegister');              // change this to POST
+    $app->get('/register/delete', 'deleteRegister');    // change this to DELETE
+    $app->post('/account/login', 'login');
+    $app->post('/account/logout', 'logout');
+
+
+    // FUNCTIONS -->
+
+    function addRegister() {
+        setHeaders();
+        $app = \Slim\Slim::getInstance();
+
         $ret["error"] = "000";
 
         if(!isRequestValid($app)) {
@@ -36,21 +48,21 @@
             }
         }
 
-        echo json_encode($ret);
-    });
+        returnJson($ret);
+    }
 
-    $app->get('/register/delete', function () use ($app) {
-        setup($app);
+    function deleteRegister() {
+        setHeaders();
         AndroidUser::truncate();
-        echo json_encode(array("error" => "000"));
-    });
+        returnJson(array("error" => "000"));
+    }
 
 	// type -> 0 - visitor, 1 - user, 2 - admin, 3 - superuser
-    $app->post('/account/login', function () use ($app) {
-        // setup($app);
+    function login() {
+        setHeaders();
+        $app = \Slim\Slim::getInstance();
 
         $data = json_decode($app->request()->getBody(), true);
-
         $result = array();
 
         if($data["username"] == "user") {
@@ -74,26 +86,18 @@
             $result["data"] = "User ".$data["username"]." does not exist";
         }
         
-        echo json_encode($result);
-    });
+        returnJson($result);
+    }
 
-    $app->options('/account/login', function () use ($app) {
-        $app->response->headers->set('Content-Type', 'application/json');
-        $app->response->headers->set('Access-Control-Allow-Origin', 'http://localhost:8000');
-        $app->response->headers->set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS, HEAD');
-        $app->response->headers->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-        $app->response->headers->set('Access-Control-Allow-Credentials', 'application/json');
-    });
+    // $app->options('/account/login', function () use ($app) {
+    //     setHeadersApp($app);
+    // });
 
-    $app->post('/account/logout', function () use ($app) {
-        setup($app);
+    function logout() {
+        setHeaders();
+        $app = \Slim\Slim::getInstance();
         $data = json_decode($app->request()->getBody(), true);
         $result["result"] = "success";
-        echo json_encode($result);
-    });
-
-    $app->get('/account/login', function () use ($app) {
-    	echo "Hello, World!";
-    });
-
+        returnJson($result);
+    }
 ?>

@@ -1,6 +1,16 @@
 <?php
-    $app->get('/get_categories', function () use ($app) {
-        setup($app);
+    use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+    // ROUTES -->
+
+    $app->get('/get_categories', 'getCategories');
+
+
+    // FUNCTIONS -->
+
+    function getCategories() {
+        setHeaders();
+        $app = \Slim\Slim::getInstance();
 
         $ret["error"] = "000";
 
@@ -10,7 +20,6 @@
           $ret["categories"] = Category::all()->toArray();
         }
         
-        echo json_encode($ret);
-    });
-
+        returnJson($ret);
+    }
 ?>

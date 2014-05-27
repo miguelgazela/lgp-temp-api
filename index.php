@@ -20,9 +20,25 @@
         'debug' => true,
         'cache' => dirname(__FILE__) . '/cache'
     );
+
+    // fixes the cross domain problem
+    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']) && (   
+           $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] == 'POST' || 
+           $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] == 'DELETE' || 
+           $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] == 'PUT' )) {
+                 header('Access-Control-Allow-Origin: *');
+                 header("Access-Control-Allow-Credentials: true"); 
+                 header('Access-Control-Allow-Headers: X-Requested-With');
+                 header('Access-Control-Allow-Headers: Content-Type');
+                 header('Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT'); // http://stackoverflow.com/a/7605119/578667
+                 header('Access-Control-Max-Age: 86400'); 
+          }
+      exit;
+    }
     
-    function setup($app) {
-        $app->contentType('application/json');
+    function setHeaders() {
+        $app = \Slim\Slim::getInstance();
         $app->response()->header('Access-Control-Allow-Origin', '*');
         $app->response()->header('Access-Control-Allow-Methods','POST, GET, PUT, DELETE, OPTIONS, HEAD');
         $app->response()->header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -33,7 +49,7 @@
         global $app;
         $res = $app->response();
         $res['Content-Type'] = "application/json";
-        $res->body($data);
+        $res->body(json_encode($data));
     }
 
     function isRequestValid($app) {
@@ -54,10 +70,9 @@
     require 'routes/selling_locations.php';
 
     $app->get('/', function () use ($app) {
-        // setup($app);
+        setHeaders($app);
         $app->render('index.html');
     });
-
 
     $app->run();
 ?>

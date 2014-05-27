@@ -1,8 +1,17 @@
 <?php
+    use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+    // ROUTES -->
+
+    $app->get('/backoffices', 'getBackoffices');
+    $app->get('/backoffices/:id', 'getBackoffice');
+
+
+    // FUNCTIONS -->
 
 	//users access level -> 0 - base, 1 - mid, 2 - max
-    $app->get('/backoffices/', function () use ($app) {
-        setup($app);
+    function getBackoffices() {
+        setHeaders();
         $result["backoffices"] = array(
             array(
                 "id" => 1,
@@ -15,11 +24,11 @@
                 "users" => array(array("id" => 1, "name" => "John", "access" => 0))
                 )
             );
-        echo json_encode($result);
-    });
+        returnJson($result);
+    }
     
-    $app->get('/backoffices/:id', function ($id) use ($app) {
-        setup($app);
+    function getBackoffice($id) {
+        setHeaders();
         $result["backoffice"] = array(
             "id" => 1,
             "name" => "Gucci",
@@ -33,7 +42,7 @@
                 "users" => array(array("id" => 1, "name" => "John", "access" => 0))
             );
         }
-        echo json_encode($result);
-    });
+        returnJson($result);
+    }
 
 ?>

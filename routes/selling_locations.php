@@ -1,6 +1,15 @@
 <?php
-    $app->get('/selling_locations/', function () use ($app) {
-        setup($app);
+    use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+    // ROUTES -->
+
+    $app->get('/selling_locations', 'getSellingLocations');
+    $app->get('/selling_locations/:id', 'getSellingLocation');
+
+
+    // FUNCTIONS -->
+
+    function getSellingLocations() {
         $result["locations"] = array(
             array(
                 "id" => 1,
@@ -19,11 +28,10 @@
                 "name" => "Lisboa",
                 "coordinates" => array("latitude"=>"38.75", "longitude"=>"-9.09")
             ));
-        echo json_encode($result);
-    });
+        returnJson($result);
+    }
     
-    $app->get('/selling_locations/:id', function ($id) use ($app) {
-        setup($app);
+    function getSellingLocation($id) {
         $result["location"] = array(
             "id" => 1,
             "name" => "Porto",
@@ -37,6 +45,6 @@
                 "coordinates"=> array("latitude"=>"38.76", "longitude"=>"-9.09")
             );
         }
-        echo json_encode($result);
-    });
+        returnJson($result);
+    }
 ?>
