@@ -43,6 +43,7 @@
 	}
 
 	function getProduct($id) {
+		setHeaders();
 		try {
 			$product = Product::findOrFail($id)->toArray();
 			returnJson($product);

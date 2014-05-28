@@ -72,6 +72,7 @@
     require 'routes/categories.php';
     require 'routes/validation.php';
     require 'routes/selling_locations.php';
+    require 'routes/tag_readings.php';
 
     $app->get('/', function () use ($app) {
         setHeaders($app);
