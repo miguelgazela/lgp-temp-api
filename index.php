@@ -117,7 +117,7 @@
 
                     move_uploaded_file($_FILES['file']['tmp_name'], $uploadPath);
                     $pos = strrpos($uploadPath, "/");
-                    $name = substr($uploadPath, $pos);
+                    $name = substr($uploadPath, $pos + 1);
 
                     $result['result'] = "success";
                     $result['img_path'] = $name;

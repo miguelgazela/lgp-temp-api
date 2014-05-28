@@ -34,6 +34,7 @@
 			$product->save();
 
 			$result['result'] = "success";
+			$result['product_id'] = $product['id'];
 		} catch (Exception $e) {
 			$result['result'] = "exception";
 		}
