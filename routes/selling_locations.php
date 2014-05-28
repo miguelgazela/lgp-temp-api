@@ -10,6 +10,7 @@
     // FUNCTIONS -->
 
     function getSellingLocations() {
+        setHeaders();
         $result["locations"] = array(
             array(
                 "id" => 1,
@@ -32,6 +33,7 @@
     }
     
     function getSellingLocation($id) {
+        setHeaders();
         $result["location"] = array(
             "id" => 1,
             "name" => "Porto",

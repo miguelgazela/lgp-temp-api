@@ -69,7 +69,7 @@
             $username = $data['username'];
             $password = $data['password'];
 
-            $user = User::where('username', '=', $username)->where('password', '=', $password)->get()->toArray();
+            $user = User::where('username', '=', $username)->where('password', '=', $password)->get()->toArray()[0];
             
             if($user) {
                 $result['result'] = "success";
@@ -94,5 +94,6 @@
         $data = json_decode($app->request()->getBody(), true);
         $result["result"] = "success";
         returnJson($result);
+        session_destroy();
     }
 ?>

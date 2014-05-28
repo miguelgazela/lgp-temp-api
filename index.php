@@ -5,6 +5,9 @@
     require 'lib/Twig/Autoloader.php';
     require 'database.php';
 
+    session_cache_limiter(false);
+    session_start();
+
     \Slim\Slim::registerAutoloader();
     Twig_Autoloader::register();
 
@@ -60,6 +63,7 @@
         return $app->request()->params($name);
     }
 
+
     // ROUTES
 
     require 'routes/auth.php';
@@ -72,6 +76,57 @@
     $app->get('/', function () use ($app) {
         setHeaders($app);
         $app->render('index.html');
+    });
+
+    $app->post('/images/upload.php', function() use ($app) {
+        setHeaders($app);
+        $result = array();
+        $result['errors'] = array();
+        $maxSize = 2097152;
+        $acceptable = array(
+            'image/jpeg',
+            'image/jpg',
+            'image/png'
+        );
+
+        if (!empty($_FILES)) {
+            $myFile = $_FILES['file'];
+
+            if ($myFile['error'] !== UPLOAD_ERR_OK) {
+                $result['result'] = "error";
+            } else {
+
+                if ($myFile['size'] >= $maxSize || $myFile['size'] == 0) {
+                    $result['errors'][] = 'File too large. File must be less than 2 megabytes.';
+                }
+
+                if (!in_array($myFile['type'], $acceptable) && !empty($myFile['type'])) {
+                    $result['errors'][] = "Invalid file type. Only JPG and PNG types are accepted.";
+                }
+
+                if (count($result['errors']) == 0) {
+                    // ensure a safe filename
+                    $name = preg_replace("/[^A-Z0-9._-]/i", "_", $myFile["name"]);
+                    
+                    $uploadPath = dirname(__FILE__).'/uploads/'.str_random(16).$name;
+
+                    // don't overwrite an existing file
+                    while (file_exists($uploadPath)) {
+                        $uploadPath = dirname(__FILE__).'/uploads/'.str_random(16).$name;
+                    }
+
+                    move_uploaded_file($_FILES['file']['tmp_name'], $uploadPath);
+                    $result['result'] = "success";
+                    $result['img_path'] = $uploadPath;
+                } else {
+                    $result['result'] = "error";
+                } 
+            }
+        } else {
+            $result['result'] = "error";
+            $result['error_msg'] = "no files";
+        }
+        returnJson($result);
     });
 
     $app->run();

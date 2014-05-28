@@ -3,12 +3,19 @@
 
     // ROUTES -->
 
-    $app->get('/get_categories', 'getCategories');
+    $app->get('/categories', 'getCategories');
+    $app->get('/get_categories', 'getCategoriesForAndroid');
 
 
     // FUNCTIONS -->
 
     function getCategories() {
+        setHeaders();
+        $categories = Category::all()->toArray();
+        returnJson($categories);
+    }
+
+    function getCategoriesForAndroid() {
         setHeaders();
         $app = \Slim\Slim::getInstance();
 
