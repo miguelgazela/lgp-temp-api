@@ -69,9 +69,10 @@
             $username = $data['username'];
             $password = $data['password'];
 
-            $user = User::where('username', '=', $username)->where('password', '=', $password)->get()->toArray()[0];
+            $res = User::where('username', '=', $username)->where('password', '=', $password)->get()->toArray();
             
-            if($user) {
+            if(!empty($res)) {
+                $user = $res[0];
                 $result['result'] = "success";
                 $result['user'] = $user;
             } else {
