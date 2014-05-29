@@ -68,7 +68,7 @@
 
     require 'routes/auth.php';
     require 'routes/products.php';
-    require 'routes/backoffices.php';
+    require 'routes/clients.php';
     require 'routes/categories.php';
     require 'routes/validation.php';
     require 'routes/selling_locations.php';
