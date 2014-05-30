@@ -50,7 +50,7 @@
           if($user->password == $password) {
             $n_password = $data["new_password"];
 
-            if($n_password == $data["confirmation_password"]) {
+            if($n_password == $data["confirm_password"]) {
                 $user->password = $n_password;
                 $user->save();
             } else {
