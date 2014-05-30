@@ -65,11 +65,11 @@
         $data = json_decode($app->request()->getBody(), true);
         $result = array();
 
-        if(isset($data['username']) && isset($data['password'])) {
-            $username = $data['username'];
+        if(isset($data['email']) && isset($data['password'])) {
+            $email = $data['email'];
             $password = $data['password'];
 
-            $res = User::where('username', '=', $username)->where('password', '=', $password)->get()->toArray();
+            $res = User::where('email', '=', $email)->where('password', '=', $password)->get()->toArray();
             
             if(!empty($res)) {
                 $user = $res[0];
