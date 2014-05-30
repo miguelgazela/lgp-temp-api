@@ -121,7 +121,7 @@
                     $name = substr($uploadPath, $pos + 1);
 
                     $result['result'] = "success";
-                    $result['img_path'] = $name;
+                    $result['img_path'] = "/uploads/".$name;
                 } else {
                     $result['result'] = "error";
                 } 
