@@ -5,9 +5,6 @@
     require 'lib/Twig/Autoloader.php';
     require 'database.php';
 
-    session_cache_limiter(false);
-    session_start();
-
     \Slim\Slim::registerAutoloader();
     Twig_Autoloader::register();
 
@@ -73,6 +70,7 @@
     require 'routes/validation.php';
     require 'routes/selling_locations.php';
     require 'routes/tag_readings.php';
+    require 'routes/settings.php';
 
     $app->get('/', function () use ($app) {
         setHeaders($app);
