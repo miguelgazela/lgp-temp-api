@@ -5,6 +5,7 @@
 
     $app->get('/clients', 'getClients');
     $app->get('/clients/:id', 'getClient');
+    $app->put('/clients/:id', 'updateClient');
     $app->post('/clients', 'createClient');
     $app->delete('/clients/:id', 'deleteClient');
 
@@ -76,6 +77,43 @@
                 $result["error"] = true;
                 $result["message"] = "Client with that name already exists";
             }
+        }
+
+        returnJson($result);
+    }
+
+    function updateClient($id) {
+        setHeaders();
+        $app = \Slim\Slim::getInstance();
+
+        $data = json_decode($app->request()->getBody(), true);
+        $result = array();
+
+        $result["error"] = false;
+        $client = Client::find($id);
+
+        if($client != null) {
+            $name = $data["name"];
+            $image = $data["image"];
+            $description = $data["description"];
+
+            if($name != null) {
+                $client->name = $name;
+            }
+
+            if($image != null) {
+                $client->image = $image;
+            }
+
+            if($description != null) {
+                $client->description = $description;
+            } 
+
+            $client->save();
+            $result["client"] = $client->toArray();
+        } else {
+            $result["error"] = true;
+            $result["message"] = "Category does not exist";
         }
 
         returnJson($result);
