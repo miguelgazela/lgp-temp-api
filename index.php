@@ -71,6 +71,7 @@
     require 'routes/selling_locations.php';
     require 'routes/tag_readings.php';
     require 'routes/settings.php';
+    require 'routes/users.php';
 
     $app->get('/', function () use ($app) {
         setHeaders($app);

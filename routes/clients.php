@@ -5,6 +5,7 @@
 
     $app->get('/clients', 'getClients');
     $app->get('/clients/:id', 'getClient');
+    $app->get('/clients/:id/users', 'getUsersForClient');
     $app->put('/clients/:id', 'updateClient');
     $app->post('/clients', 'createClient');
     $app->delete('/clients/:id', 'deleteClient');
@@ -28,6 +29,24 @@
 
         if($cli != null) {
             $result["client"] = $cli->toArray();
+        } else {
+            $result["error"] = true;
+            $result["message"] = "Client does not exist";
+        }
+
+        returnJson($result);
+    }
+
+    function getUsersForClient($id) {
+        setHeaders();
+        
+        $result["error"] = false;
+        $cli = Client::find($id);
+
+        if($cli != null) {
+            $users = User::where('client_id', '=', $id)->get();
+            $result["users"] = $users->toArray();
+            
         } else {
             $result["error"] = true;
             $result["message"] = "Client does not exist";
