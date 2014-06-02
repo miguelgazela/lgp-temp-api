@@ -6,6 +6,7 @@
     $app->get('/clients', 'getClients');
     $app->get('/clients/:id', 'getClient');
     $app->get('/clients/:id/users', 'getUsersForClient');
+    $app->get('/clients/:id/products', 'getProductsForClient');
     $app->put('/clients/:id', 'updateClient');
     $app->post('/clients', 'createClient');
     $app->delete('/clients/:id', 'deleteClient');
@@ -41,11 +42,29 @@
         setHeaders();
         
         $result["error"] = false;
-        $cli = Client::find($id);
+        $cli = Client::with('users')->find($id);
 
         if($cli != null) {
-            $users = User::where('client_id', '=', $id)->get();
+            $users = $cli->users()->get();
             $result["users"] = $users->toArray();
+            
+        } else {
+            $result["error"] = true;
+            $result["message"] = "Client does not exist";
+        }
+
+        returnJson($result);
+    }
+
+    function getProductsForClient($id) {
+        setHeaders();
+        
+        $result["error"] = false;
+        $cli = Client::with('products')->find($id);
+
+        if($cli != null) {
+            $products = $cli->products()->get();
+            $result["products"] = $products->toArray();
             
         } else {
             $result["error"] = true;
@@ -121,7 +140,7 @@
             }
 
             if($image != null) {
-                $client->image = $image;
+                $client->image_path = $image;
             }
 
             if($description != null) {
@@ -132,7 +151,7 @@
             $result["client"] = $client->toArray();
         } else {
             $result["error"] = true;
-            $result["message"] = "Category does not exist";
+            $result["message"] = "Client does not exist";
         }
 
         returnJson($result);
