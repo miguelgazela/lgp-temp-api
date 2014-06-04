@@ -53,6 +53,12 @@
     function topReadings($client_id) {
         setHeaders();
         $app = \Slim\Slim::getInstance();
+        $page_size = pageSize($app);
+        $page = param($app, "page");
+
+        if($page != null && $page < 1) {
+            $page = 1;
+        }  
 
         $result["error"] = false;
 
@@ -77,19 +83,20 @@
         } else {
             $temp_products = $client->products()->get()->toArray();
             $products_info = array();
+            $display_products = array();
 
             foreach($temp_products as $prod) {
                 $products_info[$prod["id"]] = $prod;
                 array_push($products, $prod["id"]);
             }
 
-            $group = TagReading::select('product_id', new raw('count(id) as num'))->whereIn('product_id', $products)->groupBy('product_id')->orderBy('num', 'desc')->get()->toArray();
+            $group = TagReading::select('product_id', new raw('count(id) as num'))->whereIn('product_id', $products)->groupBy('product_id')->orderBy('num', 'desc');
 
-            $display_products = array();
-
-            if($top) {
-                $group = array_slice($group, 0, $num);
+            if($page != null) {
+                $group = $group->take($page_size)->offset(($page - 1) * $page_size);
             }
+
+            $group = $group->get()->toArray();
 
             foreach($group as $tag_info) {
                 array_push($display_products, array("product"=>$products_info[$tag_info["product_id"]], "count"=>$tag_info["num"]));
@@ -104,19 +111,14 @@
     function lastReadings($client_id) {
         setHeaders();
         $app = \Slim\Slim::getInstance();
+        $page_size = pageSize($app);
+        $page = param($app, "page");
+
+        if($page != null && $page < 1) {
+            $page = 1;
+        }  
 
         $result["error"] = false;
-
-        $num = param($app, "num");
-        $top = $num != null;
-
-        if($top) {
-            if($num == null || !is_numeric($num)) {
-                $num = 5;
-            } else {
-                $num = intval($num);
-            }
-        }
 
         $client = Client::with('products')->find($client_id);
 
@@ -128,19 +130,21 @@
         } else {
             $temp_products = $client->products()->get()->toArray();
             $products_info = array();
+            $display_products = array();
 
             foreach($temp_products as $prod) {
                 $products_info[$prod["id"]] = $prod;
                 array_push($products, $prod["id"]);
             }
 
-            $group = TagReading::select('id', 'product_id', 'scan_date')->whereIn('product_id', $products)->orderBy('scan_date', 'desc')->get()->toArray();
+            $group = TagReading::select('id', 'product_id', 'scan_date')->whereIn('product_id', $products)->orderBy('scan_date', 'desc');
 
-            $display_products = array();
 
-            if($top) {
-                $group = array_slice($group, 0, $num);
+            if($page != null) {
+                $group = $group->take($page_size)->offset(($page - 1) * $page_size);
             }
+
+            $group = $group->get()->toArray();
 
             foreach($group as $tag_info) {
                 array_push($display_products, array("product"=>$products_info[$tag_info["product_id"]], "date"=>$tag_info["scan_date"], "tag_id"=>$tag_info["id"]));
@@ -155,19 +159,14 @@
     function topLocations($client_id) {
         setHeaders();
         $app = \Slim\Slim::getInstance();
+        $page_size = pageSize($app);
+        $page = param($app, "page");
+
+        if($page != null && $page < 1) {
+            $page = 1;
+        }  
 
         $result["error"] = false;
-
-        $num = param($app, "num");
-        $top = $num != null;
-
-        if($top) {
-            if($num == null || !is_numeric($num)) {
-                $num = 5;
-            } else {
-                $num = intval($num);
-            }
-        }
 
         $client = Client::with('products')->find($client_id);
 
@@ -179,19 +178,20 @@
         } else {
             $temp_products = $client->products()->get()->toArray();
             $products_info = array();
+            $display_products = array();
 
             foreach($temp_products as $prod) {
                 $products_info[$prod["id"]] = $prod;
                 array_push($products, $prod["id"]);
             }
 
-            $group = TagReading::select('id', 'product_id', 'scan_date', 'latitude', 'longitude')->whereIn('product_id', $products)->orderBy('scan_date', 'desc')->get()->toArray();
+            $group = TagReading::select('id', 'product_id', 'scan_date', 'latitude', 'longitude')->whereIn('product_id', $products)->orderBy('scan_date', 'desc');
 
-            $display_products = array();
-
-            if($top) {
-                $group = array_slice($group, 0, $num);
+            if($page != null) {
+                $group = $group->take($page_size)->offset(($page - 1) * $page_size);
             }
+
+            $group = $group->get()->toArray();
 
             foreach($group as $tag_info) {
                 //$add = json_decode(file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?latlng=".$tag_info["latitude"].",".$tag_info["longitude"]), true);
@@ -208,6 +208,14 @@
     function productReadings($product_id) {
         setHeaders();
 
+        $app = \Slim\Slim::getInstance();
+        $page_size = pageSize($app);
+        $page = param($app, "page");
+
+        if($page != null && $page < 1) {
+            $page = 1;
+        }  
+
         $result["error"] = false;
 
         $product = Product::with('tag_readings', 'tag_readings.android_user')->find($product_id);
@@ -217,7 +225,13 @@
             $result["message"] = "Client not found";
         } else {
             $c_readings = array();
-            $readings = $product->tag_readings()->get();
+            $readings = $product->tag_readings();
+
+            if($page != null) {
+                $readings = $readings->take($page_size)->offset(($page - 1) * $page_size);
+            }
+
+            $readings = $readings->get();
             
             foreach($readings as $read) {
                 $tmp = $read->toArray();

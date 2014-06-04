@@ -15,7 +15,21 @@
 
     function getCategories() {
         setHeaders();
-        $categories["categories"] = Category::all()->toArray();
+
+        $app = \Slim\Slim::getInstance();
+        $page_size = pageSize($app);
+        $page = param($app, "page");
+
+        if($page != null && $page < 1) {
+            $page = 1;
+        }  
+
+        if($page != null) {
+            $categories["categories"] = Category::take($page_size)->offset(($page - 1) * $page_size)->get()->toArray();
+        } else {
+            $categories["categories"] = Category::all()->toArray();
+        }
+
         returnJson($categories);
     }
 

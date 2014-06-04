@@ -127,7 +127,7 @@
 		
 		$app = \Slim\Slim::getInstance();
 
-		$page_size = 10;
+		$page_size = pageSize($app);
 		$ret["error"] = "000";
 
     if(!isRequestValid($app)) {

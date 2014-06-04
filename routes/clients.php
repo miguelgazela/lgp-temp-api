@@ -41,13 +41,25 @@
     function getUsersForClient($id) {
         setHeaders();
         
+        $app = \Slim\Slim::getInstance();
+        $page_size = pageSize($app);
+        $page = param($app, "page");
+
+        if($page != null && $page < 1) {
+            $page = 1;
+        }
+        
         $result["error"] = false;
         $cli = Client::with('users')->find($id);
 
         if($cli != null) {
-            $users = $cli->users()->get();
-            $result["users"] = $users->toArray();
-            
+            $users = $cli->users();
+
+            if($page != null) {
+                $users = $users->take($page_size)->offset(($page - 1) * $page_size);
+            }
+
+            $result["users"] = $users->get()->toArray();
         } else {
             $result["error"] = true;
             $result["message"] = "Client does not exist";
@@ -58,12 +70,26 @@
 
     function getProductsForClient($id) {
         setHeaders();
+
+        $app = \Slim\Slim::getInstance();
+        $page_size = pageSize($app);
+        $page = param($app, "page");
+
+        if($page != null && $page < 1) {
+            $page = 1;
+        }    
         
         $result["error"] = false;
         $cli = Client::with('products')->find($id);
 
         if($cli != null) {
-            $products = $cli->products()->get();
+            $products = $cli->products();
+
+            if($page != null) {
+                $products = $products->take($page_size)->offset(($page - 1) * $page_size);
+            }
+
+            $products = $products->get();
             $result["products"] = $products->toArray();
             
         } else {
