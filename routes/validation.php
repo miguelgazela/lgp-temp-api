@@ -22,7 +22,10 @@
             $tag->latitude = param($app, "lat");
             $tag->product_id = param($app, "product");
             $tag->android_user_id = param($app, "user");
-            $tag->created_at = DateTime::createFromFormat("D F d H:i:s eP Y", param($app, "date"));
+            $date = str_replace('*', '+', param($app, "created_at"));
+            $tag->scan_date = $date;
+
+            //DateTime::createFromFormat(DateTime::W3C, $date);
             
             if(param($app, "token") != "valid") {
                 $ret["error"] = "005";

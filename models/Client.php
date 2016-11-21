@@ -5,7 +5,7 @@
     public $timestamps = false;
 
     public function products() {
-      return $this->hashMany('Product');
+      return $this->hasMany('Product');
     }
 
     public function selling_locations() {
